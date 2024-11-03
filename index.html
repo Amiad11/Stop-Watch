@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שעון עצר</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .ad-container {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .stopwatch {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            text-align: center;
+            min-width: 400px;
+        }
+        .time {
+            font-size: 72px;
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: bold;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 20px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        #startBtn {
+            background-color: #2196F3;
+        }
+        #startBtn:hover {
+            background-color: #1976D2;
+        }
+        #stopResetBtn {
+            background-color: #f44336;
+        }
+        #stopResetBtn:hover {
+            background-color: #e53935;
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+<body>
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXX">
+        </ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <div class="stopwatch">
+        <div class="time" id="time">00:00:00</div>
+        <button id="startBtn">התחל</button>
+        <button id="stopResetBtn">עצור</button>
+    </div>
+
+    <script>
+        let startTime;
+        let updatedTime;
+        let difference = 0;
+        let pausedTime = 0;
+        let running = false;
+        let interval;
+
+        const timeDisplay = document.getElementById("time");
+        const startBtn = document.getElementById("startBtn");
+        const stopResetBtn = document.getElementById("stopResetBtn");
+
+        function startTimer() {
+            if (!running) {
+                startTime = new Date().getTime() - pausedTime;
+                interval = setInterval(updateTime, 1000);
+                running = true;
+                stopResetBtn.textContent = "עצור";
+                startBtn.textContent = "התחל"; // שינוי ל-"התחל" כשהשעון רץ
+            }
+        }
+
+        function stopTimer() {
+            clearInterval(interval);
+            running = false;
+            pausedTime = difference;
+            stopResetBtn.textContent = "אפס";
+            startBtn.textContent = "המשך"; // שינוי ל-"המשך" כשהשעון עצר
+        }
+
+        function resetTimer() {
+            clearInterval(interval);
+            running = false;
+            difference = 0;
+            pausedTime = 0;
+            timeDisplay.innerHTML = "00:00:00";
+            stopResetBtn.textContent = "עצור";
+            startBtn.textContent = "התחל"; // שינוי חזרה ל-"התחל" כשהשעון מתאפס
+        }
+
+        function updateTime() {
+            updatedTime = new Date().getTime();
+            difference = updatedTime - startTime;
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            timeDisplay.innerHTML = (hours < 10 ? "0" : "") + hours + ":" +
+                                  (minutes < 10 ? "0" : "") + minutes + ":" +
+                                  (seconds < 10 ? "0" : "") + seconds;
+        }
+
+        startBtn.onclick = startTimer;
+        stopResetBtn.onclick = function() {
+            if (running) {
+                stopTimer();
+            } else {
+                resetTimer();
+            }
+        };
+    </script>
+</body>
+</html>
